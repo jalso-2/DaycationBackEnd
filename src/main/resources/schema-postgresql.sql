@@ -1,8 +1,11 @@
 DROP TABLE IF EXISTS users, trips, destinations, users_destinations, users_trips;
+DROP SEQUENCE if EXISTS users_id_seq;
+
+CREATE SEQUENCE users_id_seq;
 
 CREATE TABLE  users (
-  ID SERIAL PRIMARY KEY,
-  NAME varchar(100) NOT NULL,
+  ID integer DEFAULT NEXTVAL('users_id_seq') PRIMARY KEY,
+  NAME varchar(100) UNIQUE NOT NULL,
   PASSWORD varchar(100) NOT NULL,
   PREFERENCES jsonb
 );

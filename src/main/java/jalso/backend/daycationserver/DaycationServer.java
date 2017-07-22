@@ -7,16 +7,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import jalso.backend.daycationserver.service.DaycationService;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1")
 public class DaycationServer {
   @Autowired DaycationService dbService;
-  
-  @RequestMapping(value = "/signup/{user}/{pass}", method = RequestMethod.GET)
-    public String addname(@PathVariable(value = "user") final String user, @PathVariable(value = "pass") final String pass) {
-      dbService.insert(user, pass);
-      return "You said: " + user + " " + pass;
+
+  @RequestMapping(value = "/seed", method = RequestMethod.GET)
+  public String seedData() {
+    String[] users = {"rose", "trob", "david", "daniel", "ray", "james"};
+    String[] passwords = {"rose123", "trob123", "david123", "daniel123", "ray123", "james123"};
+
+    for (int i = 0; i < 6; i++) {
+      dbService.signUp(users[i], passwords[i]);
     }
 
+    return "Database is seeded!";
+  }
+
+  @RequestMapping(value = "/signup/{user}/{pass}", method = RequestMethod.GET)
+  public long signUp(@PathVariable(value = "user") final String user, @PathVariable(value = "pass") final String pass) {
+    return dbService.signUp(user, pass);
+  }
+
+  @RequestMapping(value = "/login/{user}/{pass}", method = RequestMethod.GET)
+  public List<Map<String,Object>> logIn(@PathVariable(value = "user") final String user, @PathVariable(value = "pass") final String pass) {
+    return dbService.logIn(user, pass);
+  }
 }
