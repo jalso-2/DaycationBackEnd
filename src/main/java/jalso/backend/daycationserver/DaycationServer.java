@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jalso.backend.daycationserver.service.DaycationService;
@@ -27,13 +28,13 @@ public class DaycationServer {
     return "Database is seeded!";
   }
 
-  @RequestMapping(value = "/signup/{user}/{pass}", method = RequestMethod.GET)
-  public long signUp(@PathVariable(value = "user") final String user, @PathVariable(value = "pass") final String pass) {
+  @RequestMapping(value = "/signup", method = RequestMethod.POST)
+  public long signUp(@RequestParam("user") final String user, @RequestParam("pass") final String pass) {
     return dbService.signUp(user, pass);
   }
 
-  @RequestMapping(value = "/login/{user}/{pass}", method = RequestMethod.GET)
-  public List<Map<String,Object>> logIn(@PathVariable(value = "user") final String user, @PathVariable(value = "pass") final String pass) {
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  public List<Map<String,Object>> logIn(@RequestParam("user") final String user, @RequestParam("pass") final String pass) {
     return dbService.logIn(user, pass);
   }
 }
