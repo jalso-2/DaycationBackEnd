@@ -37,4 +37,16 @@ public class DaycationServer {
   public List<Map<String,Object>> logIn(@RequestParam("user") final String user, @RequestParam("pass") final String pass) {
     return dbService.logIn(user, pass);
   }
+
+  @RequestMapping(value="/getevents", method = RequestMethod.POST)
+  public void googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation) {
+    System.out.println("events");
+    System.out.println(events);
+    System.out.println("food");
+    System.out.println(food);
+    System.out.println("food");
+    System.out.println("transportation");
+    System.out.println(transportation);
+    System.out.println("transportation");
+  }
 }
