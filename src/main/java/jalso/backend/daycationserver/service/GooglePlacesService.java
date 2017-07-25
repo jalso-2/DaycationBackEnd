@@ -1,5 +1,5 @@
 package jalso.backend.daycationserver.service;
 
 public interface GooglePlacesService {
-  public void googleEvents();
+  public String googleEvents(String events, String food, String transportation);
 }

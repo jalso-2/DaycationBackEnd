@@ -1,17 +1,19 @@
 package jalso.backend.daycationserver;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jalso.backend.daycationserver.service.DaycationService;
+import jalso.backend.daycationserver.service.*;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "Content-Type" )
 @RequestMapping("/v1")
 public class DaycationServer {
   @Autowired DaycationService dbService;
@@ -35,18 +37,15 @@ public class DaycationServer {
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
   public List<Map<String,Object>> logIn(@RequestParam("user") final String user, @RequestParam("pass") final String pass) {
+    System.out.println(user);
+    System.out.println(pass);
     return dbService.logIn(user, pass);
   }
 
+  @Autowired GooglePlacesService googleService;
   @RequestMapping(value="/getevents", method = RequestMethod.POST)
-  public void googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation) {
-    System.out.println("events");
-    System.out.println(events);
-    System.out.println("food");
-    System.out.println(food);
-    System.out.println("food");
-    System.out.println("transportation");
-    System.out.println(transportation);
-    System.out.println("transportation");
+  public String googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation) {
+
+    return googleService.googleEvents(events, food, transportation);
   }
 }
