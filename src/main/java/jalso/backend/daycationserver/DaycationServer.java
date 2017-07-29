@@ -44,8 +44,8 @@ public class DaycationServer {
 
   @Autowired GooglePlacesService googleService;
   @RequestMapping(value="/getevents", method = RequestMethod.POST)
-  public String googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation) {
-
-    return googleService.googleEvents(events, food, transportation);
+  public String googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation, @RequestParam("money") final int money, @RequestParam("location") final String location) {
+    System.out.println("inside request mapping for google event");
+    return googleService.googleEvents(events, food, transportation, money, location);
   }
 }
