@@ -1,7 +1,8 @@
 DROP TABLE IF EXISTS users, trips, destinations, users_destinations, users_trips;
-DROP SEQUENCE if EXISTS users_id_seq;
+DROP SEQUENCE if EXISTS users_id_seq, destinations_id_seq;
 
 CREATE SEQUENCE users_id_seq;
+CREATE SEQUENCE destinations_id_seq;
 
 CREATE TABLE  users (
   ID integer DEFAULT NEXTVAL('users_id_seq') PRIMARY KEY,
@@ -13,11 +14,11 @@ CREATE TABLE  users (
 CREATE TABLE  trips (
   ID SERIAL PRIMARY KEY,
   NAME varchar(100) NOT NULL,
-  DESTINATIONS jsonb
+  DESCRIPTION jsonb
 );
 
 CREATE TABLE  destinations (
-  ID SERIAL PRIMARY KEY,
+  ID integer DEFAULT NEXTVAL('destinations_id_seq') PRIMARY KEY,
   NAME varchar(100) NOT NULL,
   DESCRIPTION jsonb
 );
