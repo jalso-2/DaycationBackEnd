@@ -43,11 +43,15 @@ public class DaycationServer {
   }
 
   @RequestMapping(value = "/likedestination", method = RequestMethod.POST)
-  public String likeADestination(@RequestBody String destination) {
-    dbService.insertDestination(destination);
-    return "trip was liked";
+  public int likeADestination(@RequestBody String destination) {
+    return dbService.insertDestination(destination);
   }
 
+  @RequestMapping(value = "/deletedestination", method = RequestMethod.DELETE)
+  public String deleteDestination(@RequestParam("id") final String id) {
+    dbService.removeDestination(id);
+    return "Destination was successfully deleted!";
+  }
   @Autowired GooglePlacesService googleService;
   @RequestMapping(value="/getevents", method = RequestMethod.POST)
   public ArrayList<ArrayList<String>> googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation, @RequestParam("money") final int money, @RequestParam("location") final String location) {
