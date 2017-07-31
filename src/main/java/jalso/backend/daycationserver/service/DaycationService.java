@@ -10,5 +10,7 @@ public interface DaycationService {
 
   int insertDestination(String destination);
 
-  void removeDestination(String id);
+  String removeDestination(String id);
+
+  String getUserLikes(String userId);
 }

@@ -82,7 +82,7 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
     }
   }
 
-  public void removeDestination(String destId) {
+  public String removeDestination(String destId) {
     try {
       int id = Integer.parseInt(destId);
       sql = "DELETE FROM users_destinations WHERE destination_id=?; "
@@ -90,9 +90,21 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       getJdbcTemplate().update(sql, new Object[] { 
         id, id
       });
+      return "Destination was successfully deleted!";
     } catch (Exception e) {
       e.printStackTrace();
+      return "Destination was not successfully deleted!";
     }
   }
 
+  public String getUserLikes(String userId) {
+    try {
+      int id = Integer.parseInt(userId);
+      System.out.println(id);
+      return "Getting user likes";
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "Getting user likes failed";
+    }
+  }
 }
