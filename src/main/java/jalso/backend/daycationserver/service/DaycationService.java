@@ -1,5 +1,6 @@
 package jalso.backend.daycationserver.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,5 +13,5 @@ public interface DaycationService {
 
   String removeDestination(String id);
 
-  String getUserLikes(String userId);
+  ArrayList<List<Map<String, Object>>> getUserLikes(String userId);
 }

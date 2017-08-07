@@ -47,7 +47,7 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       return getJdbcTemplate().queryForList(sql, user, pass);
     } catch (Exception e) {
       e.printStackTrace();
-      List<Map<String,Object>> myList = new ArrayList();
+      List<Map<String,Object>> myList = new ArrayList<Map<String, Object>>();
       return myList;
     }
   }
@@ -97,14 +97,33 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
     }
   }
 
-  public String getUserLikes(String userId) {
+  public ArrayList<List<Map<String, Object>>> getUserLikes(String userId) {
     try {
+      ArrayList<Integer> likesInt = new ArrayList<Integer>();
+      ArrayList<List<Map<String,Object>>> resList = new ArrayList<List<Map<String,Object>>>();
       int id = Integer.parseInt(userId);
-      System.out.println(id);
-      return "Getting user likes";
+
+      sql = "SELECT destination_id FROM users_destinations WHERE user_id = ?";
+
+      List<Map<String,Object>> likesList = getJdbcTemplate().queryForList(sql, id);
+      
+      for (Object like : likesList) {
+        int likeNum = Integer.parseInt(like.toString().replaceAll("[\\D]", ""));
+        likesInt.add(likeNum);
+      }
+
+      for (int num : likesInt) {
+        sql = "SELECT * FROM destinations WHERE id = ?";
+        List<Map<String, Object>> temp = getJdbcTemplate().queryForList(sql, num);
+        resList.add(temp);
+        System.out.println(temp);
+      }
+
+      return resList;
     } catch (Exception e) {
       e.printStackTrace();
-      return "Getting user likes failed";
+      ArrayList<List<Map<String, Object>>> myList = new ArrayList<List<Map<String, Object>>>();
+      return myList;    
     }
   }
 }

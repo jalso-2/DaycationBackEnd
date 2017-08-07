@@ -53,7 +53,7 @@ public class DaycationServer {
   }
 
   @RequestMapping(value = "/userlikes", method = RequestMethod.GET)
-  public String getLikes(@RequestParam("id") final String userId) {
+  public ArrayList<List<Map<String, Object>>> getLikes(@RequestParam("id") final String userId) {
     return dbService.getUserLikes(userId);
   }
   @Autowired GooglePlacesService googleService;
