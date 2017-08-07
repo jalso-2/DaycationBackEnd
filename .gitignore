@@ -24,4 +24,6 @@ nbdist/
 .nb-gradle/
 
 src/main/resources/application.properties
+src/main/java/jalso/backend/Config.java
+src/main/java/jalso/backend/Config2.java
 .vscode
