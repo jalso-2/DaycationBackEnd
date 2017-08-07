@@ -47,7 +47,7 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       return getJdbcTemplate().queryForList(sql, user, pass);
     } catch (Exception e) {
       e.printStackTrace();
-      List<Map<String,Object>> myList = new ArrayList();
+      List<Map<String,Object>> myList = new ArrayList<Map<String, Object>>();
       return myList;
     }
   }
@@ -82,7 +82,7 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
     }
   }
 
-  public void removeDestination(String destId) {
+  public String removeDestination(String destId) {
     try {
       int id = Integer.parseInt(destId);
       sql = "DELETE FROM users_destinations WHERE destination_id=?; "
@@ -90,9 +90,40 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       getJdbcTemplate().update(sql, new Object[] { 
         id, id
       });
+      return "Destination was successfully deleted!";
     } catch (Exception e) {
       e.printStackTrace();
+      return "Destination was not successfully deleted!";
     }
   }
 
+  public ArrayList<List<Map<String, Object>>> getUserLikes(String userId) {
+    try {
+      ArrayList<Integer> likesInt = new ArrayList<Integer>();
+      ArrayList<List<Map<String,Object>>> resList = new ArrayList<List<Map<String,Object>>>();
+      int id = Integer.parseInt(userId);
+
+      sql = "SELECT destination_id FROM users_destinations WHERE user_id = ?";
+
+      List<Map<String,Object>> likesList = getJdbcTemplate().queryForList(sql, id);
+      
+      for (Object like : likesList) {
+        int likeNum = Integer.parseInt(like.toString().replaceAll("[\\D]", ""));
+        likesInt.add(likeNum);
+      }
+
+      for (int num : likesInt) {
+        sql = "SELECT * FROM destinations WHERE id = ?";
+        List<Map<String, Object>> temp = getJdbcTemplate().queryForList(sql, num);
+        resList.add(temp);
+        System.out.println(temp);
+      }
+
+      return resList;
+    } catch (Exception e) {
+      e.printStackTrace();
+      ArrayList<List<Map<String, Object>>> myList = new ArrayList<List<Map<String, Object>>>();
+      return myList;    
+    }
+  }
 }
