@@ -24,7 +24,7 @@ CREATE TABLE  destinations (
 );
 
 CREATE TABLE  users_destinations (
-  ID SERIAL PRIMARY KEY,
+  ID integer DEFAULT NEXTVAL('trips_id_seq') PRIMARY KEY,
   USER_ID integer REFERENCES users,
   DESTINATION_ID integer REFERENCES destinations
 );

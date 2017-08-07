@@ -43,7 +43,7 @@ public class DaycationServer {
   }
 
   @RequestMapping(value = "/likedestination", method = RequestMethod.POST)
-  public int likeADestination(@RequestBody String destination) {
+  public int likeADestination(@RequestBody final String destination) {
     return dbService.insertDestination(destination);
   }
 
@@ -55,6 +55,11 @@ public class DaycationServer {
   @RequestMapping(value = "/userlikes", method = RequestMethod.GET)
   public ArrayList<List<Map<String, Object>>> getLikes(@RequestParam("id") final String userId) {
     return dbService.getUserLikes(userId);
+  }
+
+  @RequestMapping(value = "/liketrip", method = RequestMethod.POST)
+  public String likeATrip(@RequestBody final String trip) {
+    return dbService.insertTrip(trip);
   }
   @Autowired GooglePlacesService googleService;
   @RequestMapping(value="/getevents", method = RequestMethod.POST)

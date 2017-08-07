@@ -14,4 +14,6 @@ public interface DaycationService {
   String removeDestination(String id);
 
   ArrayList<List<Map<String, Object>>> getUserLikes(String userId);
+
+  String insertTrip(String trip);
 }

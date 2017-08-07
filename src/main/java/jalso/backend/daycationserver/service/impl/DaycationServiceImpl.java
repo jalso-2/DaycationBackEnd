@@ -1,10 +1,12 @@
 package jalso.backend.daycationserver.service.impl;
 
 import jalso.backend.daycationserver.service.DaycationService;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -69,7 +71,7 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
 
       sql = "INSERT INTO users_destinations (USER_ID, DESTINATION_ID) VALUES (?, ?)";
       getJdbcTemplate().update(sql, new Object[] { 
-        json.get("userid"), destinationID
+        json.get("userId"), destinationID
       });
 
       return destinationID;
@@ -124,6 +126,45 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       e.printStackTrace();
       ArrayList<List<Map<String, Object>>> myList = new ArrayList<List<Map<String, Object>>>();
       return myList;    
+    }
+  }
+
+  public String insertTrip(String trip) {
+    JSONParser parser = new JSONParser(1);
+    JSONObject json = null;
+    try {
+      json = (JSONObject) parser.parse(trip);
+      JSONArray destinations = (JSONArray) json.get("destinations");
+      ArrayList<Integer> destInt = new ArrayList<Integer>();
+      
+      System.out.println(trip);
+      for (Object dest : destinations) {
+        int temp = this.insertDestination(dest.toString());
+        destInt.add(temp);
+      }
+
+      System.out.println(destInt.toString());
+      System.out.println(json.get("name"));
+
+      sql = "INSERT into trips (NAME, DESCRIPTION) VALUES (?, CAST('" 
+        + "{\"destinations\":" + destInt + "}' as jsonb));";
+      
+      getJdbcTemplate().update(sql, new Object[] { 
+        json.get("name")
+      });
+
+      sql = "SELECT nextval('trips_id_seq');";
+      int tripID = getJdbcTemplate().queryForObject(sql, Integer.class) - 1;
+
+      sql = "INSERT INTO users_trips (USER_ID, TRIP_ID) VALUES (?, ?)";
+      getJdbcTemplate().update(sql, new Object[] { 
+        json.get("userId"), tripID 
+      });
+
+      return "Trip liked successfully";
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "Error liking a trip";
     }
   }
 }
