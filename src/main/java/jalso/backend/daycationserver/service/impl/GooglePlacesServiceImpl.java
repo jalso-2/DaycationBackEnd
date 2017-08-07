@@ -22,11 +22,14 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
   private ArrayList<String> names = new ArrayList<String>();
   private ArrayList<String> vicinities = new ArrayList<String>();
   private ArrayList<String> photos = new ArrayList<String>();
+  private ArrayList<String> prices = new ArrayList<String>();
   private ArrayList<ArrayList<String>> resLists = new ArrayList<ArrayList<String>>();
+
   private int[] maxPrices = {0, 1, 2, 3, 4};
   private int[] distance = {2500, 25000, 50000};
   private String[] eventsArr;
   private String[] foodsArr;
+  
   private int maxPrice;
   private int radius;
   private String loc;
@@ -51,9 +54,12 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
   
     queryGoogle(events.split(","), "events");
     queryGoogle(foods.split(","), "foods");
+    
     resLists.add(names);
     resLists.add(vicinities);
     resLists.add(photos);
+    resLists.add(prices);
+
     return resLists;
   }
 
@@ -76,6 +82,8 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
         String name;
         String vicinity;
         String photo;
+        String price;
+
         JSONObject jsonObject = results.getJSONObject(j);
         
         if (jsonObject.has("photos")) {
@@ -84,12 +92,19 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
         } else {
           photo = "photo_reference not found";
         }
+        if (jsonObject.has("price_level")) {
+          price = Integer.toString(jsonObject.getInt("price_level"));
+        } else {
+          price = Integer.toString(-1);
+        }
 
         name = jsonObject.getString("name");
         vicinity = jsonObject.getString("vicinity");
+        
         names.add(name);
         vicinities.add(vicinity);
         photos.add(photo);
+        prices.add(price);
       }
     }
     } catch (UnirestException e) {

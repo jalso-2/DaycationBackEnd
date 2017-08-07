@@ -1,6 +1,9 @@
 package jalso.backend.daycationserver.service.impl;
 
 import jalso.backend.daycationserver.service.DaycationService;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,18 +18,16 @@ import org.springframework.stereotype.Repository;
 public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationService {
   @Autowired 
 	DataSource dataSource;
-	
+	String sql;
 	@PostConstruct
 	private void initialize(){
 		setDataSource(dataSource);
 	}
 	
-	@Override
 	public long signUp(String user, String pass) {
     System.out.println("inside signUp function");
     try {
-      String sql = "INSERT INTO users " +
-        "(NAME, PASSWORD) VALUES (?, ?)" ;
+      sql = "INSERT INTO users (NAME, PASSWORD) VALUES (?, ?)" ;
       getJdbcTemplate().update(sql, new Object[]{
         user, pass
       });
@@ -38,16 +39,40 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
     }
   }
 
-  @Override
 	public List<Map<String,Object>> logIn(String user, String pass) {
     System.out.println("inside logIn function");
+     
     try {
-      String sql = "SELECT * FROM users WHERE name= ? AND password= ?;";
+      sql = "SELECT id,name,preferences FROM users WHERE name= ? AND password= ?;";
       return getJdbcTemplate().queryForList(sql, user, pass);
     } catch (Exception e) {
       List<Map<String,Object>> myList = new ArrayList();
       return myList;
     }
+  }
 
+  public void insertDestination(String dest){ 
+    JSONParser parser = new JSONParser(1);
+    JSONObject json = null;
+
+    try {
+      json = (JSONObject) parser.parse(dest);
+      sql = "INSERT INTO destinations (NAME, DESCRIPTION) VALUES (?, CAST('" + json.get("description").toString().replaceAll("\"", "\\\"") + "'as jsonb))";
+      getJdbcTemplate().update(sql, new Object[]{
+        json.get("name")
+      });
+
+      sql = "SELECT nextval('destinations_id_seq');";
+      int destinationID = getJdbcTemplate().queryForObject(sql, Integer.class) - 1;
+
+      sql = "INSERT INTO users_destinations (USER_ID, DESTINATION_ID) VALUES (?, ?)";
+      getJdbcTemplate().update(sql, new Object[] { 
+        json.get("userid"), destinationID
+      });
+    } catch (ParseException e) {
+        e.printStackTrace();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 }

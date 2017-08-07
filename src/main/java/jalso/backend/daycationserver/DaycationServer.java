@@ -3,6 +3,7 @@ package jalso.backend.daycationserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,9 +39,13 @@ public class DaycationServer {
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
   public List<Map<String,Object>> logIn(@RequestParam("user") final String user, @RequestParam("pass") final String pass) {
-    System.out.println(user);
-    System.out.println(pass);
     return dbService.logIn(user, pass);
+  }
+
+  @RequestMapping(value = "/likedestination", method = RequestMethod.POST)
+  public String likeADestination(@RequestBody String destination) {
+    dbService.insertDestination(destination);
+    return "trip was liked";
   }
 
   @Autowired GooglePlacesService googleService;
