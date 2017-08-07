@@ -46,18 +46,20 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       sql = "SELECT id,name,preferences FROM users WHERE name= ? AND password= ?;";
       return getJdbcTemplate().queryForList(sql, user, pass);
     } catch (Exception e) {
+      e.printStackTrace();
       List<Map<String,Object>> myList = new ArrayList();
       return myList;
     }
   }
 
-  public void insertDestination(String dest){ 
+  public int insertDestination(String dest){ 
     JSONParser parser = new JSONParser(1);
     JSONObject json = null;
 
     try {
       json = (JSONObject) parser.parse(dest);
-      sql = "INSERT INTO destinations (NAME, DESCRIPTION) VALUES (?, CAST('" + json.get("description").toString().replaceAll("\"", "\\\"") + "'as jsonb))";
+      sql = "INSERT INTO destinations (NAME, DESCRIPTION) VALUES (?, CAST('" 
+        + json.get("description").toString().replaceAll("\"", "\\\"") + "'as jsonb))";
       getJdbcTemplate().update(sql, new Object[]{
         json.get("name")
       });
@@ -69,10 +71,28 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       getJdbcTemplate().update(sql, new Object[] { 
         json.get("userid"), destinationID
       });
+
+      return destinationID;
     } catch (ParseException e) {
-        e.printStackTrace();
+      e.printStackTrace();
+      return -1;
     } catch (Exception ex) {
       ex.printStackTrace();
+      return -1;
     }
   }
+
+  public void removeDestination(String destId) {
+    try {
+      int id = Integer.parseInt(destId);
+      sql = "DELETE FROM users_destinations WHERE destination_id=?; "
+        + "DELETE FROM destinations WHERE id=?;";
+      getJdbcTemplate().update(sql, new Object[] { 
+        id, id
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
 }
