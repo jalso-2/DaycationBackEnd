@@ -20,4 +20,6 @@ public interface DaycationService {
   String removeTrip(String tripId);
 
   ArrayList<Object> getUserTrips(String userId);
+
+  List<Map<String, Object>> currentTrip(String trip);
 }

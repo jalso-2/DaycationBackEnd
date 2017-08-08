@@ -41,7 +41,7 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
 
 	public List<Map<String,Object>> logIn(String user, String pass) {
     try {
-      sql = "SELECT id,name,preferences FROM users WHERE name= ? AND password= ?;";
+      sql = "SELECT id,name,preferences,current_trip FROM users WHERE name= ? AND password= ?;";
       return getJdbcTemplate().queryForList(sql, user, pass);
     } catch (Exception e) {
       e.printStackTrace();
@@ -230,6 +230,32 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       e.printStackTrace();
       ArrayList<Object> tempHolder = new ArrayList<Object>();
       return tempHolder;
+    }
+  }
+
+  public List<Map<String, Object>> currentTrip(String tripInfo) {
+    JSONParser parser = new JSONParser(1);
+    JSONObject json = null;
+    try {
+      json = (JSONObject) parser.parse(tripInfo);
+      this.insertTrip(tripInfo);
+
+      int id = Integer.parseInt(json.get("userId").toString());
+
+      sql = "SELECT lastval();";
+      int tripID = getJdbcTemplate().queryForObject(sql, Integer.class);
+      
+      sql = "UPDATE users SET current_trip = ? WHERE id = ?;";
+      getJdbcTemplate().update(sql, new Object[] { 
+        tripID, id
+      });
+
+      sql = "SELECT id,name,preferences,current_trip FROM users WHERE id= ?;";
+      return getJdbcTemplate().queryForList(sql, id);
+    } catch (Exception e) {
+      e.printStackTrace();
+      List<Map<String, Object>> myList = new ArrayList<Map<String, Object>>();
+      return myList;
     }
   }
 }

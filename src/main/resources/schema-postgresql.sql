@@ -9,6 +9,7 @@ CREATE TABLE  users (
   ID integer DEFAULT NEXTVAL('users_id_seq') PRIMARY KEY,
   NAME varchar(100) UNIQUE NOT NULL,
   PASSWORD varchar(100) NOT NULL,
+  CURRENT_TRIP integer,
   PREFERENCES jsonb
 );
 
