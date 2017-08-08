@@ -43,7 +43,7 @@ public class DaycationServer {
   }
 
   @RequestMapping(value = "/addpreferences", method = RequestMethod.POST)
-  public String addPreferences(@RequestBody final String userPref) {
+  public List<Map<String, Object>> addPreferences(@RequestBody final String userPref) {
     return dbService.userPreferences(userPref);
   }
 
