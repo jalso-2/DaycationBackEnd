@@ -1,8 +1,9 @@
 DROP TABLE IF EXISTS users, trips, destinations, users_destinations, users_trips;
-DROP SEQUENCE if EXISTS users_id_seq, destinations_id_seq;
+DROP SEQUENCE if EXISTS users_id_seq, destinations_id_seq, trips_id_seq;
 
 CREATE SEQUENCE users_id_seq;
 CREATE SEQUENCE destinations_id_seq;
+CREATE SEQUENCE trips_id_seq;
 
 CREATE TABLE  users (
   ID integer DEFAULT NEXTVAL('users_id_seq') PRIMARY KEY,

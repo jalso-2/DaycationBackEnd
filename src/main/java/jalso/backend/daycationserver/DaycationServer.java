@@ -61,6 +61,12 @@ public class DaycationServer {
   public String likeATrip(@RequestBody final String trip) {
     return dbService.insertTrip(trip);
   }
+
+  @RequestMapping(value = "/deletetrip", method = RequestMethod.DELETE)
+  public String deleteATrip(@RequestParam("id") final String id) {
+    return dbService.removeTrip(id);
+  }
+
   @Autowired GooglePlacesService googleService;
   @RequestMapping(value="/getevents", method = RequestMethod.POST)
   public ArrayList<ArrayList<String>> googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation, @RequestParam("money") final int money, @RequestParam("location") final String location) {
