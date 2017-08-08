@@ -18,4 +18,6 @@ public interface DaycationService {
   String insertTrip(String trip);
 
   String removeTrip(String tripId);
+
+  ArrayList<Object> getUserTrips(String userId);
 }

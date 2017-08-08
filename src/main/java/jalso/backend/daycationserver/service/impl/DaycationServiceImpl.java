@@ -6,12 +6,10 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import javax.annotation.PostConstruct;
-import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -27,7 +25,6 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
 	}
 	
 	public long signUp(String user, String pass) {
-    System.out.println("inside signUp function");
     try {
       sql = "INSERT INTO users (NAME, PASSWORD) VALUES (?, ?)" ;
       getJdbcTemplate().update(sql, new Object[]{
@@ -43,7 +40,6 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
   }
 
 	public List<Map<String,Object>> logIn(String user, String pass) {
-    System.out.println("inside logIn function");
     try {
       sql = "SELECT id,name,preferences FROM users WHERE name= ? AND password= ?;";
       return getJdbcTemplate().queryForList(sql, user, pass);
@@ -120,7 +116,6 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
         sql = "SELECT * FROM destinations WHERE id = ?";
         List<Map<String, Object>> temp = getJdbcTemplate().queryForList(sql, num);
         resList.add(temp);
-        System.out.println(temp);
       }
 
       return resList;
@@ -180,7 +175,10 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
       });
 
       for (Map<String, Object> dest : destId) {
-        String tempString = dest.get("description").toString().substring(18, dest.get("description").toString().length() - 2);
+        String tempString = dest.get("description")
+          .toString()
+          .substring(18, dest.get("description")
+          .toString().length() - 2);
         String[] tempArr = tempString.trim().split(",");
         for (String num : tempArr) {
           this.removeDestination(num.trim());
@@ -190,6 +188,48 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
     } catch (Exception e) {
       e.printStackTrace();
       return "Error deleting trip";
+    }
+  }
+
+  public ArrayList<Object> getUserTrips(String userId) {
+    try {
+      ArrayList<Object> holder = new ArrayList<Object>();
+      int id = Integer.parseInt(userId);
+
+      sql = "SELECT trip_id FROM users_trips WHERE user_id = ?";
+      List<Map<String, Object>> tripList = getJdbcTemplate().queryForList(sql, id);
+
+      for (Object tripId : tripList) {
+        int tempTripId = Integer.parseInt(tripId.toString().replaceAll("[\\D]", ""));
+
+        sql = "SELECT name,description FROM trips WHERE id = ?";
+        List<Map<String, Object>> tempTrip = getJdbcTemplate().queryForList(sql, tempTripId);
+
+        for (Map<String, Object> dest : tempTrip) {
+          ArrayList<Object> tempHolder = new ArrayList<Object>();
+          tempHolder.add(dest.get("name"));
+          
+          String tempString = dest.get("description")
+            .toString()
+            .substring(18, dest.get("description")
+            .toString().length() - 2);
+          
+          String[] tempArr = tempString.trim().split(",");
+          for (String num : tempArr) {
+            int tempNum = Integer.parseInt(num.trim());
+            
+            sql = "SELECT * FROM destinations WHERE id = ?";
+            List<Map<String, Object>> tempDest = getJdbcTemplate().queryForList(sql, tempNum);
+            tempHolder.add(tempDest.get(0));
+          }
+          holder.add(tempHolder);
+        }
+      }
+      return holder;
+    } catch (Exception e) {
+      e.printStackTrace();
+      ArrayList<Object> tempHolder = new ArrayList<Object>();
+      return tempHolder;
     }
   }
 }
