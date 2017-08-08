@@ -9,6 +9,8 @@ public interface DaycationService {
 
   List<Map<String,Object>> logIn(String username, String password);
 
+  String userPreferences(String userPref);
+
   int insertDestination(String destination);
 
   String removeDestination(String id);

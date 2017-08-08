@@ -42,6 +42,11 @@ public class DaycationServer {
     return dbService.logIn(user, pass);
   }
 
+  @RequestMapping(value = "/addpreferences", method = RequestMethod.POST)
+  public String addPreferences(@RequestBody final String userPref) {
+    return dbService.userPreferences(userPref);
+  }
+
   @RequestMapping(value = "/likedestination", method = RequestMethod.POST)
   public int likeADestination(@RequestBody final String destination) {
     return dbService.insertDestination(destination);
