@@ -43,7 +43,7 @@ public class DaycationServer {
   }
 
   @RequestMapping(value = "/likedestination", method = RequestMethod.POST)
-  public int likeADestination(@RequestBody String destination) {
+  public int likeADestination(@RequestBody final String destination) {
     return dbService.insertDestination(destination);
   }
 
@@ -56,6 +56,27 @@ public class DaycationServer {
   public ArrayList<List<Map<String, Object>>> getLikes(@RequestParam("id") final String userId) {
     return dbService.getUserLikes(userId);
   }
+
+  @RequestMapping(value = "/liketrip", method = RequestMethod.POST)
+  public String likeATrip(@RequestBody final String trip) {
+    return dbService.insertTrip(trip);
+  }
+
+  @RequestMapping(value = "/deletetrip", method = RequestMethod.DELETE)
+  public String deleteATrip(@RequestParam("id") final String id) {
+    return dbService.removeTrip(id);
+  }
+
+  @RequestMapping(value = "/usertrips", method = RequestMethod.GET)
+  public ArrayList<Object> getTrips(@RequestParam("id") final String userId) {
+    return dbService.getUserTrips(userId);
+  }
+
+  @RequestMapping(value = "/currenttrip", method = RequestMethod.POST)
+  public List<Map<String, Object>> getCurrentTrip(@RequestBody final String trip) {
+    return dbService.currentTrip(trip);
+  }
+
   @Autowired GooglePlacesService googleService;
   @RequestMapping(value="/getevents", method = RequestMethod.POST)
   public ArrayList<ArrayList<String>> googleEvents(@RequestParam("events") final String events, @RequestParam("food") final String food, @RequestParam("transportation") final String transportation, @RequestParam("money") final int money, @RequestParam("location") final String location) {
