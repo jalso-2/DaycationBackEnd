@@ -50,10 +50,31 @@ public class DaycationServiceImpl extends JdbcDaoSupport  implements DaycationSe
     }
   }
 
+  public List<Map<String, Object>> userPreferences(String userPref) {
+    JSONParser parser = new JSONParser(1);
+    JSONObject json = null;
+    try {
+      json = (JSONObject) parser.parse(userPref);
+      JSONArray prefsArr = (JSONArray) json.get("prefs");
+      int id = Integer.parseInt(json.get("userId").toString());
+
+      sql = "UPDATE users SET preferences = CAST('" + prefsArr + "'as jsonb) WHERE id = ?;";
+      getJdbcTemplate().update(sql, new Object[] { 
+        id
+      });
+      
+      sql = "SELECT id,name,preferences,current_trip FROM users WHERE id=?;";
+      return getJdbcTemplate().queryForList(sql, id);
+    } catch (Exception e) {
+      e.printStackTrace();
+      List<Map<String, Object>> myList = new ArrayList<Map<String, Object>>();
+      return myList;
+    }
+  }
+
   public int insertDestination(String dest){ 
     JSONParser parser = new JSONParser(1);
     JSONObject json = null;
-
     try {
       json = (JSONObject) parser.parse(dest);
       
