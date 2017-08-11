@@ -7,9 +7,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import jalso.backend.daycationserver.service.GooglePlacesService;
 import jalso.backend.Config2;
-
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +39,13 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
     char bike = 'b';
     char bus = 'u';
     char car = 'c';
-    
+    if (resLists.size() > 0) {
+      names.clear();
+      vicinities.clear();
+      photos.clear();
+      prices.clear();
+      resLists.clear();
+    }
     loc = location;
 
     if (transportation.charAt(0) == walk) {  radius = distance[0]; }
@@ -112,5 +118,15 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
     } catch (JSONException ex) {
       ex.printStackTrace();
     }
+  }
+
+  public void emptyArrays() {
+    // empty 
+    // names
+    // vicinities
+    // photos
+    // prices
+    // resLists
+   
   }
 }
