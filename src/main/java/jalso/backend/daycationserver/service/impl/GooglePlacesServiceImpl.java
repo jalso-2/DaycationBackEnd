@@ -7,9 +7,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import jalso.backend.daycationserver.service.GooglePlacesService;
 import jalso.backend.Config2;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.Timer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,13 +118,4 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
     }
   }
 
-  public void emptyArrays() {
-    // empty 
-    // names
-    // vicinities
-    // photos
-    // prices
-    // resLists
-   
-  }
 }
